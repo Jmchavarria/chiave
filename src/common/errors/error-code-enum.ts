@@ -1,0 +1,16 @@
+export enum ErrorCode {
+  register_not_found = 1001,
+  record_id_undefined = 1002,
+  validation_error = 1004,
+  internal_server_error = 1005,
+  update_record_failed = 1006,
+  create_record_failed = 1007,
+  error_getting_records = 1008,
+  book_exists_verfication_error = 1009,
+  book_already_exists = 1010,
+  category_already_exists = 1011,
+  database_error = 1012,
+  token_oauth_not_exist = 1013,
+  user_already_exist = 1014,
+  password_mismatch = 1015,
+}

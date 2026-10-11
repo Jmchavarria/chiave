@@ -1,4 +1,3 @@
-// @ts-check
 import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
@@ -31,27 +30,35 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'warn',
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
 
-      '@typescript-eslint/no-unnecessary-type-assertion': 'warn', // evita casteos innecesarios (value as string)
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
           prefer: 'type-imports',
-          disallowTypeAnnotations: false, // 👈 Añade esto
+          disallowTypeAnnotations: false,
         },
-      ], // fuerza: import type { X } cuando solo es un tipo
-      '@typescript-eslint/no-inferrable-types': 'warn', // evita: const x: number = 5 (TypeScript ya lo infiere)
-      '@typescript-eslint/prefer-nullish-coalescing': 'warn', // prefiere ?? sobre ||
-      '@typescript-eslint/prefer-optional-chain': 'warn', // prefiere a?.b?.c sobre a && a.b && a.b.c
+      ],
+      '@typescript-eslint/no-inferrable-types': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'warn',
 
       // ─── Seguridad y bugs ──────────────────────────────
-      '@typescript-eslint/no-unused-vars': 'error', // variables declaradas pero no usadas
-      '@typescript-eslint/no-shadow': 'warn', // evita re-declarar variables del scope padre
-      'no-console': 'warn', // avisa si dejas console.log olvidados
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-shadow': 'warn',
+      'no-console': 'warn',
 
       // ─── Buenas prácticas generales ────────────────────
-      eqeqeq: ['error', 'always'], // fuerza === en vez de ==
-      'no-return-await': 'warn', // evita return await innecesario
-      'prefer-const': 'error', // fuerza const cuando la variable no cambia
+      eqeqeq: ['error', 'always'],
+      'no-return-await': 'warn',
+      'prefer-const': 'error',
+    },
+  },
+  // 👇 ESTO SOLuciona el problema de los decoradores de TypeORM de una vez por todas
+  {
+    files: ['**/*.entity.ts', '**/*.orm-entity.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
     },
   },
 );

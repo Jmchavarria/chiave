@@ -1,18 +1,35 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { LoginUserCommand } from '../../application/commands/login-user/login-user.command';
 import { LoginUserResult } from '../../application/commands/login-user/login-user.handler';
-import { UserDE } from '../../../users/domain/entities/user.domain-entity';
+import { LogoutUserCommand } from '../../application/commands/logout-user/logout-user.command';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { CurrentUserResult } from '../../application/queries/get-current-user.ts/get-current-user.handler';
-import { GetCurrentUserQuery } from '../../application/queries/get-current-user.ts/get-current-user.query';
 import { LoginHttpDto } from './dto/login.http-dto';
+import { RefreshTokensCommand } from '../../application/commands/refresh-token/refresh-tokens.command';
+import { RefreshTokensResult } from '../../application/commands/refresh-token/refresh-tokens.handler';
+import { GetCurrentUserQuery } from '../../application/queries/get-current-user.ts/get-current-user.query';
+import { UserDE } from '../../../users/domain/entities/user.domain-entity';
+import { VerifyEmailCommand } from '../../application/commands/verify-email/verify-email.command';
 
 interface AuthenticatedRequest {
   user: {
     sub: number;
     email: string;
   };
+}
+
+interface RefreshTokenHttpDto {
+  refreshToken: string;
 }
 
 @Controller('auth')
@@ -24,30 +41,36 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: LoginHttpDto): Promise<LoginUserResult> {
+  login(@Body() body: LoginHttpDto): Promise<LoginUserResult> {
     return this.commandBus.execute<LoginUserCommand, LoginUserResult>(
       new LoginUserCommand(body.email, body.password),
     );
   }
 
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  refresh(@Body() body: RefreshTokenHttpDto): Promise<RefreshTokensResult> {
+    return this.commandBus.execute<RefreshTokensCommand, RefreshTokensResult>(
+      new RefreshTokensCommand(body.refreshToken),
+    );
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@Body() body: RefreshTokenHttpDto): Promise<void> {
+    await this.commandBus.execute(new LogoutUserCommand(body.refreshToken));
+  }
+
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async getCurrentUser(@Req() request: AuthenticatedRequest): Promise<CurrentUserResult> {
-    const user = await this.queryBus.execute<GetCurrentUserQuery, UserDE>(
+  getCurrentUser(@Req() request: AuthenticatedRequest): Promise<UserDE> {
+    return this.queryBus.execute<GetCurrentUserQuery, UserDE>(
       new GetCurrentUserQuery(request.user.sub),
     );
-    if (user.id === undefined) {
-      throw new Error('The user does not have a valid ID');
-    }
+  }
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      status: user.status,
-      emailVerifiedAt: user.emailVerifiedAt,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
+  @Post('verify-email')
+  async verifyEmail(@Query('token') token: string): Promise<void> {
+    await this.commandBus.execute(new VerifyEmailCommand(token));
   }
 }

@@ -22,6 +22,7 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
 
     return user ? UserMapper.toDomain(user) : null;
   }
+
   async save(user: UserDE): Promise<UserDE> {
     const userEntity = this.repository.create({
       id: user.id,
@@ -36,7 +37,7 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
 
     const savedEntity = await this.repository.save(userEntity);
 
-    return UserMapper.toDomain(savedEntity);
+    return UserMapper.toReconstituite(savedEntity);
   }
 
   async findById(id: number): Promise<UserDE | null> {
@@ -44,6 +45,6 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
       where: { id },
     });
 
-    return user ? UserMapper.toDomain(user) : null;
+    return user ? UserMapper.toReconstituite(user) : null;
   }
 }

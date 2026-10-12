@@ -3,11 +3,23 @@ import type { UserOrmEntity } from '../persistence/user.orm-entity';
 
 export class UserMapper {
   static toDomain(user: UserOrmEntity): UserDE {
-    return UserDE.reconstitute({
+    return UserDE.create({
       id: user.id,
       name: user.name,
       email: user.email,
       passwordHash: user.passwordHash,
+      status: user.status,
+      emailVerifiedAt: user.emailVerifiedAt,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
+  }
+
+  static toReconstituite(user: UserOrmEntity): UserDE {
+    return UserDE.reconstitute({
+      id: user.id,
+      name: user.name,
+      email: user.email,
       status: user.status,
       emailVerifiedAt: user.emailVerifiedAt,
       createdAt: user.createdAt,

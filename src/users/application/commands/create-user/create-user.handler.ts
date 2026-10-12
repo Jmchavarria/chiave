@@ -1,16 +1,18 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from './create-user.command';
 import { UserDE } from '../../../domain/entities/user.domain-entity';
 import { UserRepositoryPort } from '../../../domain/ports/user-repository.port';
 import { CustomError } from '../../../../common/errors/custom.error';
 import { ErrorCode } from '../../../../common/errors/error-code-enum';
 import { PasswordHasherPort } from '../../../domain/ports/password-hasher.port';
+import { CreateEmailVerificationTokenCommand } from '../../../../auth/application/commands/create-email-verification-token/create-email-verification-token.command';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand, UserDE> {
   constructor(
     private readonly repository: UserRepositoryPort,
     private readonly passwordHasher: PasswordHasherPort,
+    private readonly commandBus: CommandBus,
   ) {}
 
   async execute(command: CreateUserCommand): Promise<UserDE> {
@@ -35,6 +37,12 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand, Use
       updatedAt: new Date(),
     });
 
-    return this.repository.save(user);
+    const savedUser = await this.repository.save(user);
+
+    await this.commandBus.execute(
+      new CreateEmailVerificationTokenCommand(savedUser.id, savedUser.email, savedUser.name),
+    );
+
+    return savedUser;
   }
 }

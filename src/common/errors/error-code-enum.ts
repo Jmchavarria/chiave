@@ -13,4 +13,7 @@ export enum ErrorCode {
   token_oauth_not_exist = 1013,
   user_already_exist = 1014,
   password_mismatch = 1015,
+  user_not_found = 1016,
+  invalid_verification_email = 1017,
+  verification_email_does_not_exist = 1018,
 }

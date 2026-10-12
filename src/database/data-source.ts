@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { UserOrmEntity } from '../users/infrastructure/persistence/user.orm-entity';
+import { RefreshTokenOrmEntity } from '../auth/infrastructure/persistence/orm/refresh-token.orm-entity';
+import { EmailVerificationTokenOrmEntity } from '../auth/infrastructure/persistence/orm/email-verification-token.orm-entity';
 export const dataSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST ?? 'localhost',
@@ -8,7 +10,7 @@ export const dataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [UserOrmEntity],
+  entities: [UserOrmEntity, RefreshTokenOrmEntity, EmailVerificationTokenOrmEntity],
   synchronize: process.env.NODE_ENV !== 'production',
   logging: process.env.NODE_ENV === 'development',
 });

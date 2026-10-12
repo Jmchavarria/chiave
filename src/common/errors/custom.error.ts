@@ -15,13 +15,7 @@ export class CustomError extends Error {
   public readonly instanceName?: string;
   public readonly details?: unknown;
 
-  constructor({
-    code,
-    message,
-    statusCode,
-    instanceName,
-    details,
-  }: CustomErrorParams) {
+  constructor({ code, message, statusCode, instanceName, details }: CustomErrorParams) {
     super(message);
     this.name = 'CustomError';
     this.code = code;

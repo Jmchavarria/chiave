@@ -21,7 +21,12 @@ export class ResendEmailAdapter extends EmailServicePort {
     this.resend = new Resend(apiKey);
   }
 
-  async sendVerificationEmail(params: { to: string; name: string; token: string }): Promise<void> {
+  async sendVerificationEmail(params: {
+    to: string;
+    name: string;
+    token: string;
+    userId: number;
+  }): Promise<void> {
     const from = this.configService.get<string>('RESEND_FROM_EMAIL');
 
     if (!from) {
@@ -33,7 +38,7 @@ export class ResendEmailAdapter extends EmailServicePort {
 
     const frontendUrl = this.configService.getOrThrow<string>('FRONTEND_URL').replace(/\/+$/, '');
 
-    const verificationUrl = `${frontendUrl}/auth/verify-email?token=${encodeURIComponent(params.token)}`;
+    const verificationUrl = `${frontendUrl}/auth/verify-email?id=${encodeURIComponent(params.userId)}&token=${encodeURIComponent(params.token)}`;
 
     const result = await this.resend.emails.send({
       from,

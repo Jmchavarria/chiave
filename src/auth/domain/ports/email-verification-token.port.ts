@@ -7,6 +7,6 @@ export interface SaveEmailTokenVerficationProps {
 }
 export abstract class EmailVerificationTokenPort {
   abstract save(input: SaveEmailTokenVerficationProps): Promise<void>;
-  abstract findByToken(tokenHash: string): Promise<EmailVerificationTokenDE | null>;
-  abstract verifyAndActivateUser(token: string): Promise<void>;
+  abstract findByUser(userId: number): Promise<EmailVerificationTokenDE | null>;
+  abstract verifyAndActivateUser(userId: number): Promise<void>;
 }

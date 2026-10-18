@@ -1,3 +1,6 @@
 export class verifyAndActivateUserCommand {
-  constructor(public token: string) {}
+  constructor(
+    public userId: number,
+    public token: string,
+  ) {}
 }

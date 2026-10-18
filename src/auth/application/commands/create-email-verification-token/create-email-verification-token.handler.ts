@@ -33,6 +33,7 @@ export class CreateEmailVerificationTokenHandler implements ICommandHandler<
       name: command.name,
       to: command.email,
       token,
+      userId: command.userId,
     });
   }
 }

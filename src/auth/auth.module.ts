@@ -21,7 +21,6 @@ import { EmailVerificationTokenPort } from './domain/ports/email-verification-to
 import { TypeOrmEmailVerificationTokenRepository } from './infrastructure/persistence/email-verification-token.repository';
 import { CreateEmailVerificationTokenHandler } from './application/commands/create-email-verification-token/create-email-verification-token.handler';
 import { CommonModule } from '../common/common.module';
-import { VerifyEmailHandler } from './application/commands/verify-email/verify-email.handler';
 import { VerifyAndActivateUserHandler } from './application/commands/verify-and-activate-user/verify-and-activate-user.handler';
 
 @Module({
@@ -52,7 +51,6 @@ import { VerifyAndActivateUserHandler } from './application/commands/verify-and-
     GetCurrentUserHandler,
     TypeOrmRefreshTokenRepository,
     CreateEmailVerificationTokenHandler,
-    VerifyEmailHandler,
     VerifyAndActivateUserHandler,
     {
       provide: EmailVerificationTokenPort,

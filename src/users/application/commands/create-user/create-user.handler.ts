@@ -39,6 +39,8 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand, Use
 
     const savedUser = await this.repository.save(user);
 
+    console.log('a ver que es lo q tenmos aca', savedUser.id);
+
     await this.commandBus.execute(
       new CreateEmailVerificationTokenCommand(savedUser.id, savedUser.email, savedUser.name),
     );

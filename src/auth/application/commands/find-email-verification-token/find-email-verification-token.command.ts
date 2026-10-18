@@ -1,3 +1,3 @@
 export class FindEmailVerificationTokenCommand {
-  constructor(public tokenHash: string) {}
+  constructor(public userId: number) {}
 }

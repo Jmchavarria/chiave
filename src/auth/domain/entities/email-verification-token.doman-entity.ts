@@ -1,3 +1,5 @@
+import type { IEmailVerificationToken } from '../interfaces/email-verification-token.interface';
+
 export class EmailVerificationTokenDE {
   public id: number;
   public expiresAt: Date;
@@ -7,10 +9,4 @@ export class EmailVerificationTokenDE {
   constructor(attributes: IEmailVerificationToken) {
     Object.assign(this, attributes);
   }
-}
-
-export interface IEmailVerificationToken {
-  id: number;
-  expiresAt: Date;
-  usedAt: Date | null;
 }

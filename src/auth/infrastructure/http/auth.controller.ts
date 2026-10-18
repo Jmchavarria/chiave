@@ -19,7 +19,7 @@ import { RefreshTokensCommand } from '../../application/commands/refresh-token/r
 import { RefreshTokensResult } from '../../application/commands/refresh-token/refresh-tokens.handler';
 import { GetCurrentUserQuery } from '../../application/queries/get-current-user.ts/get-current-user.query';
 import { UserDE } from '../../../users/domain/entities/user.domain-entity';
-import { VerifyEmailCommand } from '../../application/commands/verify-email/verify-email.command';
+import { verifyAndActivateUserCommand } from '../../application/commands/verify-and-activate-user/verify-and-activate-user.command';
 
 interface AuthenticatedRequest {
   user: {
@@ -70,7 +70,7 @@ export class AuthController {
   }
 
   @Post('verify-email')
-  async verifyEmail(@Query('token') token: string): Promise<void> {
-    await this.commandBus.execute(new VerifyEmailCommand(token));
+  async verifyEmail(@Query('userId') userId: number, @Query('token') token: string): Promise<void> {
+    await this.commandBus.execute(new verifyAndActivateUserCommand(userId, token));
   }
 }

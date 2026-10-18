@@ -6,13 +6,13 @@ import { ErrorCode } from '../../../../common/errors/error-code-enum';
 import { EmailVerificationTokenDE } from '../../../domain/entities/email-verification-token.doman-entity';
 
 @CommandHandler(FindEmailVerificationTokenCommand)
-export class FindEmailVerificationTokenHandler implements ICommandHandler<
+export class FindEmailVerificationTokenByUserHandler implements ICommandHandler<
   FindEmailVerificationTokenCommand,
   EmailVerificationTokenDE
 > {
   constructor(private readonly repository: EmailVerificationTokenPort) {}
   async execute(command: FindEmailVerificationTokenCommand): Promise<EmailVerificationTokenDE> {
-    const token = await this.repository.findByToken(command.tokenHash);
+    const token = await this.repository.findByUser(command.userId);
 
     if (!token)
       throw new CustomError({

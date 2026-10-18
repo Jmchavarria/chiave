@@ -3,5 +3,6 @@ export abstract class EmailServicePort {
     to: string;
     name: string;
     token: string;
+    userId: number;
   }): Promise<void>;
 }

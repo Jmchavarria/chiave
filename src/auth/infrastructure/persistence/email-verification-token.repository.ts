@@ -24,71 +24,43 @@ export class TypeOrmEmailVerificationTokenRepository implements EmailVerificatio
     await this.repository.save(input);
   }
 
-  async findByToken(tokenHash: string): Promise<EmailVerificationTokenDE | null> {
-    const token = await this.repository.findOneBy({ tokenHash });
+  async findByUser(userId: number): Promise<EmailVerificationTokenDE | null> {
+    const token = await this.repository.findOneBy({ userId });
 
     return token ? EmailVerificationTokenMapper.toDomain(token) : null;
   }
-
-  async verifyAndActivateUser(tokenHash: string): Promise<void> {
+  async verifyAndActivateUser(userId: number): Promise<void> {
     await this.dataSource.transaction(async (manager) => {
       const tokenRepository = manager.getRepository(EmailVerificationTokenOrmEntity);
-
       const userRepository = manager.getRepository(UserOrmEntity);
 
       const result = await tokenRepository
         .createQueryBuilder()
         .update(EmailVerificationTokenOrmEntity)
         .set({ usedAt: () => 'CURRENT_TIMESTAMP' })
-        .where('token_hash = :tokenHash', { tokenHash })
-        .andWhere('used_at IS NULL')
+        .where('user_id = :userId', { userId })
         .andWhere('expires_at > CURRENT_TIMESTAMP')
+        .andWhere('used_at IS NULL')
         .returning(['user_id'])
         .execute();
 
       const rows: unknown = result.raw;
+      const firstRow: unknown = Array.isArray(rows) ? rows[0] : undefined;
 
-      if (!Array.isArray(rows)) {
+      if (typeof firstRow !== 'object' || firstRow === null || !('user_id' in firstRow)) {
         throw new CustomError({
-          message: 'No se pudo validar el token de verificación.',
+          message: 'No se pudo encontrar un token de verificación activo para este usuario.',
           code: ErrorCode.invalid_verification_email,
         });
       }
 
-      const firstRow: unknown = rows[0];
-
-      if (
-        typeof firstRow !== 'object' ||
-        firstRow === null ||
-        !('user_id' in firstRow) ||
-        typeof firstRow.user_id !== 'number'
-      ) {
-        throw new CustomError({
-          message: 'El token de verificación es inválido, expiró o ya fue utilizado.',
-          code: ErrorCode.invalid_verification_email,
-        });
-      }
-
-      const userId = firstRow.user_id;
-      const verifiedAt = new Date();
-
-      const updateResult = await userRepository.update(
-        {
-          id: userId,
-          status: 'PENDING_VERIFICATION',
-        },
+      await userRepository.update(
+        { id: userId },
         {
           status: 'ACTIVE',
-          emailVerifiedAt: verifiedAt,
+          emailVerifiedAt: new Date(),
         },
       );
-
-      if (updateResult.affected !== 1) {
-        throw new CustomError({
-          message: 'No se pudo activar la cuenta del usuario.',
-          code: ErrorCode.invalid_verification_email,
-        });
-      }
     });
   }
 }

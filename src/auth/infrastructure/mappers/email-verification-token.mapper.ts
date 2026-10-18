@@ -7,6 +7,7 @@ export class EmailVerificationTokenMapper {
       id: entity.id,
       expiresAt: entity.expiresAt,
       usedAt: entity.usedAt,
+      tokenHash: entity.tokenHash,
     });
   }
 }

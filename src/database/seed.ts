@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import * as argon2 from 'argon2';
 import { dataSource } from './data-source';
-import { UserOrmEntity } from '../users/infrastructure/persistence/user.orm-entity';
-import type { UserStatus } from '../users/domain/types/user-status.type';
+import type { UserStatus } from '../app/users/domain/types/user-status.type';
+import { UserOrmEntity } from '../app/users/infrastructure/persistence/user.orm-entity';
 
 async function seed(): Promise<void> {
   await dataSource.initialize();

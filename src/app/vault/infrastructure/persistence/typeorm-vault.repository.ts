@@ -50,8 +50,7 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
       query.andWhere(
         `
         (
-        vault.email ILIKE :search OR
-        vault.query ILIKE :search
+        vault.type ILIKE :search
         )
         `,
         {
@@ -73,5 +72,18 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
       pageQuery,
       takeQuery,
     );
+  }
+
+  async findById(id: number, userId: number): Promise<VaultDE | null> {
+    const entity = await this.repository.findOne({
+      where: { id, userId },
+    });
+
+    return entity ? VaultMapper.toDomain(entity) : null;
+  }
+
+  async delete(id: number, userId: number): Promise<boolean> {
+    const result = await this.repository.delete({ id, userId });
+    return (result.affected ?? 0) > 0;
   }
 }

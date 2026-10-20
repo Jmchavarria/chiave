@@ -11,4 +11,6 @@ export interface FindVaultByUserIdProps extends IPagination {
 export abstract class VaultRepositoryPort {
   abstract save(input: VaultDE): Promise<VaultDE>;
   abstract findByUserId(input: FindVaultByUserIdProps): Promise<Pagination<VaultDE[]>>;
+  abstract findById(id: number, userId: number): Promise<VaultDE | null>;
+  abstract delete(id: number, userId: number): Promise<boolean>;
 }

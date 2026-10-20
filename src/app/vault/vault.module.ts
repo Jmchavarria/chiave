@@ -7,6 +7,7 @@ import { CreateVaultHandler } from './application/commands/create-vault/create-v
 import { FindVaultByUserIdHandler } from './application/queries/find-vault-by-user-id/find-vault-by-user-id.handler';
 import { VaultController } from './infrastructure/http/vault.controller';
 import { CqrsModule } from '@nestjs/cqrs';
+import { DeleteVaultHandler } from './application/commands/delete-vault/delete-vault.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([VaultItemsOrmEntity]), CqrsModule],
@@ -14,6 +15,7 @@ import { CqrsModule } from '@nestjs/cqrs';
   providers: [
     CreateVaultHandler,
     FindVaultByUserIdHandler,
+    DeleteVaultHandler,
     {
       provide: VaultRepositoryPort,
       useClass: TypeOrmVaultRepository,

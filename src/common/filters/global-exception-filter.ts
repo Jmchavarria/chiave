@@ -76,8 +76,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       return;
     }
 
-    const error =
-      exception instanceof Error ? exception : new Error(String(exception));
+    const error = exception instanceof Error ? exception : new Error(String(exception));
     response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       success: false,
       error: {

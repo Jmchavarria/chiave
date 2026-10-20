@@ -9,10 +9,7 @@ export class CustomValidationPipe<T = unknown> implements PipeTransform<
   unknown,
   Promise<T | unknown>
 > {
-  async transform(
-    value: unknown,
-    { metatype }: ArgumentMetadata,
-  ): Promise<T | unknown> {
+  async transform(value: unknown, { metatype }: ArgumentMetadata): Promise<T | unknown> {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
@@ -27,7 +24,7 @@ export class CustomValidationPipe<T = unknown> implements PipeTransform<
     if (errors.length > 0) {
       const details = this.formatErrors(errors);
 
-      throw new CustomError({
+      new CustomError({
         code: ErrorCode.validation_error,
         message: 'Validation failed',
         statusCode: 400,
@@ -37,16 +34,12 @@ export class CustomValidationPipe<T = unknown> implements PipeTransform<
     return object;
   }
 
-  private formatErrors(
-    errors: ValidationError[],
-  ): Array<{ field: string; errors: string[] }> {
+  private formatErrors(errors: ValidationError[]): Array<{ field: string; errors: string[] }> {
     const formatted: Array<{ field: string; errors: string[] }> = [];
 
     const extract = (errorList: ValidationError[], parentPath = '') => {
       for (const err of errorList) {
-        const fieldPath = parentPath
-          ? `${parentPath}.${err.property}`
-          : err.property;
+        const fieldPath = parentPath ? `${parentPath}.${err.property}` : err.property;
 
         if (err.constraints) {
           formatted.push({

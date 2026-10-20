@@ -17,7 +17,7 @@ export class VaultItemsOrmEntity {
   id: number;
 
   @Index()
-  @Column({ name: 'user_id', type: 'number' })
+  @Column({ name: 'user_id', type: 'int' })
   userId: number;
 
   @ManyToOne(() => UserOrmEntity, { onDelete: 'CASCADE' })

@@ -1,9 +1,9 @@
-import type { VaultItemType } from '../../types/vault-item.type';
+import type { VaultItemEnumType } from '../../types/vault-item.type';
 
 export interface IVault {
   id?: number;
   userId: number;
-  type: VaultItemType;
+  type: VaultItemEnumType;
   isFavorite: boolean;
   encryptedData: string;
   iv: string;

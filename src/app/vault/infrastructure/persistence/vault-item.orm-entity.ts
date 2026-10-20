@@ -5,24 +5,31 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
-import { VaultItemType } from '../../types/vault-item.type';
+import { UserOrmEntity } from '../../../users/infrastructure/persistence/user.orm-entity';
+import { VaultItemEnumType } from '../../types/vault-item.type';
 
 @Entity('vault_items')
-export class VaultOrmEntity {
-  @PrimaryGeneratedColumn('uuid')
+export class VaultItemsOrmEntity {
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Index()
-  @Column({ name: 'user_id', type: 'uuid' })
+  @Column({ name: 'user_id', type: 'number' })
   userId: number;
+
+  @ManyToOne(() => UserOrmEntity, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user: UserOrmEntity;
 
   @Column({
     type: 'enum',
-    enum: VaultItemType,
-    default: VaultItemType.LOGIN,
+    enum: VaultItemEnumType,
+    default: VaultItemEnumType.LOGIN,
   })
-  type: VaultItemType;
+  type: VaultItemEnumType;
 
   @Column({ name: 'is_favorite', type: 'boolean', default: false })
   isFavorite: boolean;

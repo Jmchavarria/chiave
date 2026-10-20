@@ -4,7 +4,7 @@ import { UserDE } from '../../../domain/entities/user.domain-entity';
 import { UserRepositoryPort } from '../../../domain/ports/user-repository.port';
 
 @QueryHandler(FindUserByIdQuery)
-export class GetUserByIdHandler implements IQueryHandler<FindUserByIdQuery, UserDE | null> {
+export class FindUserByIdHandler implements IQueryHandler<FindUserByIdQuery, UserDE | null> {
   constructor(private readonly repository: UserRepositoryPort) {}
 
   execute(query: FindUserByIdQuery): Promise<UserDE | null> {

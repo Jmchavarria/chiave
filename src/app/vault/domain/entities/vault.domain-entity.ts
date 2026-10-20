@@ -1,10 +1,10 @@
-import type { VaultItemType } from '../../types/vault-item.type';
+import type { VaultItemEnumType } from '../../types/vault-item.type';
 import type { IVault } from '../interfaces/vault.interface';
 
 export class VaultDE {
   public id: number;
   public userId: number;
-  public type: VaultItemType;
+  public type: VaultItemEnumType;
   public isFavorite: boolean;
   public encryptedData: string;
   public iv: string;
@@ -12,13 +12,13 @@ export class VaultDE {
   public createdAt: Date;
   public updatedAt: Date;
 
-  constructor(attributes: Partial<IVault>) {
+  constructor(attributes: IVault) {
     Object.assign(this, attributes);
   }
 
   public static create(props: {
     userId: number;
-    type: VaultItemType;
+    type: VaultItemEnumType;
     encryptedData: string;
     iv: string;
     authTag: string;

@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import type { UserStatus } from '../../domain/types/user-status.type';
+import { VaultItemsOrmEntity } from '../../../vault/infrastructure/persistence/vault-item.orm-entity';
 
 @Entity({ name: 'users' })
 @Index('UQ_users_email', ['email'], { unique: true })
@@ -29,6 +31,9 @@ export class UserOrmEntity {
     default: 'PENDING_VERIFICATION',
   })
   status: UserStatus;
+
+  @OneToMany(() => VaultItemsOrmEntity, (vaultItem) => vaultItem.user)
+  vaultItems: VaultItemsOrmEntity[];
 
   @Column({
     name: 'email_verified_at',

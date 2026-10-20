@@ -1,8 +1,8 @@
 import { VaultDE } from '../../domain/entities/vault.domain-entity';
-import type { VaultOrmEntity } from '../persistence/vault-item.orm-entity';
+import type { VaultItemsOrmEntity } from '../persistence/vault-item.orm-entity';
 
 export class VaultMapper {
-  static toDomain(vault: VaultOrmEntity): VaultDE {
+  static toDomain(vault: VaultItemsOrmEntity): VaultDE {
     return VaultDE.create({
       authTag: vault.authTag,
       encryptedData: vault.encryptedData,
@@ -13,7 +13,7 @@ export class VaultMapper {
     });
   }
 
-  static toReconstituite(vault: VaultOrmEntity): VaultDE {
+  static toReconstituite(vault: VaultItemsOrmEntity): VaultDE {
     return VaultDE.reconstitute({
       id: vault.id,
       authTag: vault.authTag,

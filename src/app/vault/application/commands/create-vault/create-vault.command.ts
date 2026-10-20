@@ -4,9 +4,9 @@ export class CreateVaultCommand {
   constructor(
     public userId: number,
     public type: VaultItemEnumType,
-    public isFavorite: boolean,
     public encryptedData: string,
     public iv: string,
     public authTag: string,
+    public isFavorite?: boolean,
   ) {}
 }

@@ -2,18 +2,10 @@ import { VaultDE } from '../../domain/entities/vault.domain-entity';
 import type { VaultItemsOrmEntity } from '../persistence/vault-item.orm-entity';
 
 export class VaultMapper {
+  /**
+   * Reconstruye la entidad de dominio completa a partir de la entidad ORM persistida
+   */
   static toDomain(vault: VaultItemsOrmEntity): VaultDE {
-    return VaultDE.create({
-      authTag: vault.authTag,
-      encryptedData: vault.encryptedData,
-      isFavorite: vault.isFavorite,
-      iv: vault.iv,
-      type: vault.type,
-      userId: vault.userId,
-    });
-  }
-
-  static toReconstituite(vault: VaultItemsOrmEntity): VaultDE {
     return VaultDE.reconstitute({
       id: vault.id,
       authTag: vault.authTag,

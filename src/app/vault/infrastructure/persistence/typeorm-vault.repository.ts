@@ -20,8 +20,6 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
     const vault = this.repository.create({
       id: input.id,
       authTag: input.authTag,
-      createdAt: input.authTag,
-      updatedAt: input.authTag,
       encryptedData: input.encryptedData,
       isFavorite: input.isFavorite,
       iv: input.iv,
@@ -31,7 +29,7 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
 
     const savedEntity = await this.repository.save(vault);
 
-    return VaultMapper.toReconstituite(savedEntity);
+    return VaultMapper.toDomain(savedEntity);
   }
 
   async findByUserId(input: FindVaultByUserIdProps): Promise<Pagination<VaultDE[]>> {
@@ -70,7 +68,7 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
     const total = await query.getCount();
 
     return new Pagination(
-      data.map((entity) => VaultMapper.toReconstituite(entity)),
+      data.map((entity) => VaultMapper.toDomain(entity)),
       total,
       pageQuery,
       takeQuery,

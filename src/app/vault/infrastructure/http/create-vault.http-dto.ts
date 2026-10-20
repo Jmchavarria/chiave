@@ -1,20 +1,24 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsBoolean, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { VaultItemEnumType } from '../../types/vault-item.type';
 
 export class CreateVaultHttpDto {
-  @IsNotEmpty()
   @IsEnum(VaultItemEnumType)
+  @IsNotEmpty()
   type: VaultItemEnumType;
 
-  @IsBoolean()
-  isFavorite: boolean;
-
   @IsString()
+  @IsNotEmpty()
   encryptedData: string;
 
   @IsString()
+  @IsNotEmpty()
   iv: string;
 
   @IsString()
+  @IsNotEmpty()
   authTag: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isFavorite?: boolean;
 }

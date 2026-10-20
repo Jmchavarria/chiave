@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { VaultDE } from '../../domain/entities/vault.domain-entity';
 import { Pagination } from '../../../../common/pagintation';
 import { FindVaultByUserIdQuery } from '../../application/queries/find-vault-by-user-id/find-vault-by-user-id.query';
 import { FindVaultByUserIdHttpDto } from './find-vault-by-user-id.http-dto';
+import { CreateVaultCommand } from '../../application/commands/create-vault/create-vault.command';
+import { CreateVaultHttpDto } from './create-vault.http-dto';
 
 @Controller('vault')
 export class VaultController {
@@ -12,9 +14,26 @@ export class VaultController {
     private readonly queryBus: QueryBus,
   ) {}
 
+  @Post(':userId')
+  async createVaultItem(
+    @Param('userId') userId: number,
+    @Body() dto: CreateVaultHttpDto,
+  ): Promise<VaultDE> {
+    return this.commandBus.execute<CreateVaultCommand, VaultDE>(
+      new CreateVaultCommand(
+        userId,
+        dto.type,
+        dto.encryptedData,
+        dto.iv,
+        dto.authTag,
+        dto.isFavorite,
+      ),
+    );
+  }
+
   @Get(':id')
   findVaultByUserId(
-    @Param('id', ParseIntPipe) userId: number,
+    @Param('id') userId: number,
     @Query() input: FindVaultByUserIdHttpDto,
   ): Promise<Pagination<VaultDE[]>> {
     return this.queryBus.execute<FindVaultByUserIdQuery, Pagination<VaultDE[]>>(

@@ -3,6 +3,7 @@ import type { VaultItemEnumType } from '../../types/vault-item.type';
 export interface IVault {
   id?: number;
   userId: number;
+  title: string;
   type: VaultItemEnumType;
   isFavorite: boolean;
   encryptedData: string;

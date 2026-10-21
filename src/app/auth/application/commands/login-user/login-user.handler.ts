@@ -8,8 +8,15 @@ import { TokenServicePort } from '../../../domain/ports/token-service.port';
 import { RefreshTokenRepositoryPort } from '../../../domain/ports/refresh-token-repository.port';
 
 export interface LoginUserResult {
-  accessToken: string;
-  refreshToken: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  authSession: {
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 const hashToken = (token: string): string => createHash('sha256').update(token).digest('hex');
@@ -63,8 +70,15 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand, Login
     });
 
     return {
-      accessToken,
-      refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      authSession: {
+        accessToken,
+        refreshToken,
+      },
     };
   }
 }

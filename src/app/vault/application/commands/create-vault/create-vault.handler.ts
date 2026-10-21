@@ -10,6 +10,7 @@ export class CreateVaultHandler implements ICommandHandler<CreateVaultCommand, V
   execute(command: CreateVaultCommand): Promise<VaultDE> {
     const vault = VaultDE.create({
       userId: command.userId,
+      title: command.title,
       authTag: command.authTag,
       isFavorite: command.isFavorite,
       type: command.type,

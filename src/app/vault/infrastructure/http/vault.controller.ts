@@ -39,6 +39,7 @@ export class VaultController {
     return this.commandBus.execute<CreateVaultCommand, VaultDE>(
       new CreateVaultCommand(
         userId,
+        dto.title,
         dto.type,
         dto.encryptedData,
         dto.iv,

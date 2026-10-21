@@ -8,7 +8,7 @@ export class Argon2PasswordHasher implements PasswordHasherPort {
     return argon2.hash(password);
   }
 
-  async verify(password: string, passwordHash: string): Promise<boolean> {
-    return argon2.verify(passwordHash, password);
+  async verify(plainText: string, hash: string): Promise<boolean> {
+    return argon2.verify(hash, plainText);
   }
 }

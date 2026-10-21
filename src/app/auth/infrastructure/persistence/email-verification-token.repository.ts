@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, IsNull, Repository } from 'typeorm';
 import { EmailVerificationTokenOrmEntity } from './orm/email-verification-token.orm-entity';
 import { UserOrmEntity } from '../../../users/infrastructure/persistence/user.orm-entity';
 import {
@@ -23,41 +23,49 @@ export class TypeOrmEmailVerificationTokenRepository implements EmailVerificatio
   }
 
   async findByUser(userId: number): Promise<EmailVerificationTokenDE | null> {
-    const token = await this.repository.findOneBy({ userId });
+    const token = await this.repository.findOne({
+      where: {
+        userId,
+        usedAt: IsNull(),
+      },
+    });
 
     return token ? EmailVerificationTokenMapper.toDomain(token) : null;
   }
   async verifyAndActivateUser(userId: number): Promise<void> {
     await this.dataSource.transaction(async (manager) => {
       const tokenRepository = manager.getRepository(EmailVerificationTokenOrmEntity);
+
       const userRepository = manager.getRepository(UserOrmEntity);
 
       const result = await tokenRepository
         .createQueryBuilder()
         .update(EmailVerificationTokenOrmEntity)
-        .set({ usedAt: () => 'CURRENT_TIMESTAMP' })
+        .set({
+          usedAt: () => 'CURRENT_TIMESTAMP',
+        })
         .where('user_id = :userId', { userId })
         .andWhere('expires_at > CURRENT_TIMESTAMP')
         .andWhere('used_at IS NULL')
-        .returning(['user_id'])
         .execute();
 
-      const rows: unknown = result.raw;
-      const firstRow: unknown = Array.isArray(rows) ? rows[0] : undefined;
-
-      if (typeof firstRow !== 'object' || firstRow === null || !('user_id' in firstRow)) {
+      if (!result.affected) {
         throw new BadRequestException(
           'An active verification token could not be found for this user.',
         );
       }
 
-      await userRepository.update(
+      const userResult = await userRepository.update(
         { id: userId },
         {
           status: 'ACTIVE',
           emailVerifiedAt: new Date(),
         },
       );
+
+      if (!userResult.affected) {
+        throw new BadRequestException('The user could not be activated.');
+      }
     });
   }
 }

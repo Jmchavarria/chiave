@@ -6,6 +6,7 @@ import type { IVault } from '../interfaces/vault.interface';
 export class VaultDE {
   public id: number;
   public userId: number;
+  public title: string;
   public type: VaultItemEnumType;
   public isFavorite: boolean;
   public encryptedData: string;
@@ -20,6 +21,7 @@ export class VaultDE {
 
   public static create(props: {
     userId: number;
+    title: string;
     type: VaultItemEnumType;
     encryptedData: string;
     iv: string;
@@ -65,6 +67,7 @@ export class VaultDE {
 
     return new VaultDE({
       userId: props.userId,
+      title: props.title,
       type: props.type,
       encryptedData: props.encryptedData,
       iv: props.iv,

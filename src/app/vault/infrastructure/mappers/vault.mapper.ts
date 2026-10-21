@@ -5,6 +5,7 @@ export class VaultMapper {
   static toDomain(vault: VaultItemsOrmEntity): VaultDE {
     return VaultDE.reconstitute({
       id: vault.id,
+      title: vault.title,
       authTag: vault.authTag,
       encryptedData: vault.encryptedData,
       isFavorite: vault.isFavorite,

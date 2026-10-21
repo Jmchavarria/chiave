@@ -3,6 +3,7 @@ import type { VaultItemEnumType } from '../../../types/vault-item.type';
 export class CreateVaultCommand {
   constructor(
     public readonly userId: number,
+    public readonly title: string,
     public readonly type: VaultItemEnumType,
     public readonly encryptedData: string,
     public readonly iv: string,

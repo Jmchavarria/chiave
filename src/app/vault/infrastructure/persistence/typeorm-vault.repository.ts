@@ -19,6 +19,7 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
   async save(input: VaultDE): Promise<VaultDE> {
     const vault = this.repository.create({
       id: input.id,
+      title: input.title,
       authTag: input.authTag,
       encryptedData: input.encryptedData,
       isFavorite: input.isFavorite,

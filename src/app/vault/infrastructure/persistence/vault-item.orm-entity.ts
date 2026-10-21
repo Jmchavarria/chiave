@@ -25,6 +25,9 @@ export class VaultItemsOrmEntity {
   @JoinColumn({ name: 'user_id' })
   user: UserOrmEntity;
 
+  @Column({ type: 'varchar', length: 150 })
+  title: string;
+
   @Column({
     type: 'enum',
     enum: VaultItemEnumType,

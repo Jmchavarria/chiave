@@ -2,6 +2,10 @@ import { IsEnum, IsBoolean, IsString, IsNotEmpty, IsOptional } from 'class-valid
 import { VaultItemEnumType } from '../../types/vault-item.type';
 
 export class CreateVaultHttpDto {
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
   @IsEnum(VaultItemEnumType)
   @IsNotEmpty()
   type: VaultItemEnumType;

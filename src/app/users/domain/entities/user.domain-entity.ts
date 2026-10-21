@@ -22,14 +22,12 @@ export class UserDE {
       throw new CustomError({
         message: 'The user identifier must be a positive integer.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
     if (!props.name?.trim()) {
       throw new CustomError({
         message: 'The user name is required.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -39,7 +37,6 @@ export class UserDE {
       throw new CustomError({
         message: 'The name must be between 2 and 100 characters long.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -47,7 +44,6 @@ export class UserDE {
       throw new CustomError({
         message: 'The email address is required.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -57,7 +53,6 @@ export class UserDE {
       throw new CustomError({
         message: 'The email address is not valid.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -65,7 +60,6 @@ export class UserDE {
       throw new CustomError({
         message: 'The password hash is required.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -73,7 +67,6 @@ export class UserDE {
       throw new CustomError({
         message: 'The password hash cannot exceed 255 characters.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -83,7 +76,6 @@ export class UserDE {
       throw new CustomError({
         message: 'The user status is not valid.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -94,7 +86,6 @@ export class UserDE {
       throw new CustomError({
         message: 'The verification date is not valid.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 
@@ -102,7 +93,6 @@ export class UserDE {
       throw new CustomError({
         message: 'A user must verify their email before becoming active.',
         code: ErrorCode.database_error,
-        instanceName: UserDE.name,
       });
     }
 

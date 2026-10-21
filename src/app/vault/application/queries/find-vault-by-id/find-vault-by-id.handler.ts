@@ -17,7 +17,6 @@ export class FindVaultByIdHandler implements IQueryHandler<FindVaultByIdQuery, V
         code: ErrorCode.register_not_found,
         message: 'The vault item does not exist or does not belong to the user',
         statusCode: 404,
-        instanceName: FindVaultByIdHandler.name,
       });
 
     return vault;

@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { VaultDE } from '../../domain/entities/vault.domain-entity';
 import { Pagination } from '../../../../common/pagintation';
@@ -6,7 +19,10 @@ import { FindVaultByUserIdQuery } from '../../application/queries/find-vault-by-
 import { FindVaultByUserIdHttpDto } from './find-vault-by-user-id.http-dto';
 import { CreateVaultCommand } from '../../application/commands/create-vault/create-vault.command';
 import { CreateVaultHttpDto } from './create-vault.http-dto';
+import { UpdateVaultCommand } from '../../application/commands/update-vault/update-vault.command';
+import { ToggleFavoriteVaultCommand } from '../../application/commands/toggle-favorite-vault/toggle-favorite-vault.command';
 import { DeleteVaultCommand } from '../../application/commands/delete-vault/delete-vault.command';
+import { UpdateVaultHttpDto } from './update-vault.http-dto';
 
 @Controller('vault')
 export class VaultController {
@@ -17,7 +33,7 @@ export class VaultController {
 
   @Post(':userId')
   async createVaultItem(
-    @Param('userId') userId: number,
+    @Param('userId', ParseIntPipe) userId: number,
     @Body() dto: CreateVaultHttpDto,
   ): Promise<VaultDE> {
     return this.commandBus.execute<CreateVaultCommand, VaultDE>(
@@ -33,8 +49,8 @@ export class VaultController {
   }
 
   @Get(':id')
-  findVaultByUserId(
-    @Param('id') userId: number,
+  async findVaultByUserId(
+    @Param('id', ParseIntPipe) userId: number,
     @Query() input: FindVaultByUserIdHttpDto,
   ): Promise<Pagination<VaultDE[]>> {
     return this.queryBus.execute<FindVaultByUserIdQuery, Pagination<VaultDE[]>>(
@@ -48,14 +64,42 @@ export class VaultController {
     );
   }
 
-  @Delete(':userId/:id')
-  async deleteVaultItem(
-    @Param('userId') userId: number,
-    @Param('id') id: number,
-  ): Promise<{ success: boolean }> {
-    const success = await this.commandBus.execute<DeleteVaultCommand, boolean>(
-      new DeleteVaultCommand(id, userId),
+  @Put(':userId/:id')
+  async updateVaultItem(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateVaultHttpDto,
+  ): Promise<VaultDE> {
+    return this.commandBus.execute<UpdateVaultCommand, VaultDE>(
+      new UpdateVaultCommand(
+        id,
+        userId,
+        dto.type,
+        dto.encryptedData,
+        dto.iv,
+        dto.authTag,
+        dto.isFavorite,
+      ),
     );
-    return { success };
+  }
+
+  @Patch(':userId/:id/favorite')
+  async toggleFavoriteVaultItem(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VaultDE> {
+    return this.commandBus.execute<ToggleFavoriteVaultCommand, VaultDE>(
+      new ToggleFavoriteVaultCommand(id, userId),
+    );
+  }
+
+  @Delete(':userId/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteVaultItem(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ success: boolean }> {
+    await this.commandBus.execute<DeleteVaultCommand, void>(new DeleteVaultCommand(id, userId));
+    return { success: true };
   }
 }

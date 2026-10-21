@@ -30,7 +30,6 @@ export class VaultDE {
       throw new CustomError({
         code: ErrorCode.validation_error,
         message: 'User ID is required to register a vault item.',
-        instanceName: VaultDE.name,
       });
     }
 
@@ -38,7 +37,6 @@ export class VaultDE {
       throw new CustomError({
         code: ErrorCode.validation_error,
         message: 'Item type (LOGIN, NOTE, CARD) is required.',
-        instanceName: VaultDE.name,
       });
     }
 
@@ -46,7 +44,6 @@ export class VaultDE {
       throw new CustomError({
         code: ErrorCode.validation_error,
         message: 'Encrypted payload (encryptedData) cannot be empty.',
-        instanceName: VaultDE.name,
       });
     }
 
@@ -54,7 +51,6 @@ export class VaultDE {
       throw new CustomError({
         code: ErrorCode.validation_error,
         message: 'Initialization vector (iv) is required for AES-256-GCM encryption.',
-        instanceName: VaultDE.name,
       });
     }
 
@@ -62,7 +58,6 @@ export class VaultDE {
       throw new CustomError({
         code: ErrorCode.validation_error,
         message: 'Authentication tag (authTag) is required to verify integrity.',
-        instanceName: VaultDE.name,
       });
     }
 
@@ -90,7 +85,6 @@ export class VaultDE {
         throw new CustomError({
           code: ErrorCode.validation_error,
           message: 'Encrypted payload (encryptedData) cannot be empty.',
-          instanceName: VaultDE.name,
         });
       }
       this.encryptedData = props.encryptedData;
@@ -101,7 +95,6 @@ export class VaultDE {
         throw new CustomError({
           code: ErrorCode.validation_error,
           message: 'Initialization vector (iv) cannot be empty.',
-          instanceName: VaultDE.name,
         });
       }
       this.iv = props.iv;
@@ -112,7 +105,6 @@ export class VaultDE {
         throw new CustomError({
           code: ErrorCode.validation_error,
           message: 'Authentication tag (authTag) cannot be empty.',
-          instanceName: VaultDE.name,
         });
       }
       this.authTag = props.authTag;
@@ -123,6 +115,10 @@ export class VaultDE {
     }
 
     this.updatedAt = new Date();
+  }
+
+  public toggleFavorite(): void {
+    this.isFavorite = !this.isFavorite;
   }
 
   public static reconstitute(props: IVault): VaultDE {

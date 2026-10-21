@@ -16,7 +16,6 @@ export class FindUserByIdHandler implements IQueryHandler<FindUserByIdQuery, Use
       throw new CustomError({
         code: ErrorCode.user_not_found,
         message: 'User not found',
-        instanceName: FindUserByIdHandler.name,
       });
 
     return user;

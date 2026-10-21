@@ -7,6 +7,7 @@ import {
   Index,
   ManyToOne,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { UserOrmEntity } from '../../../users/infrastructure/persistence/user.orm-entity';
 import { VaultItemEnumType } from '../../types/vault-item.type';
@@ -48,4 +49,7 @@ export class VaultItemsOrmEntity {
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 }

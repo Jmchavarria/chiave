@@ -4,21 +4,8 @@ export class CreateVaultCommand {
   constructor(
     public readonly userId: number,
     public readonly title: string,
-    public readonly type: VaultItemEnumType,
-    public readonly encryptedData: string,
-    public readonly iv: string,
-    public readonly authTag: string,
+    public readonly secretValue: string,
+    public readonly type?: VaultItemEnumType,
     public readonly isFavorite?: boolean,
   ) {}
-
-  toPayload() {
-    return {
-      userId: this.userId,
-      type: this.type,
-      encryptedData: this.encryptedData,
-      iv: this.iv,
-      authTag: this.authTag,
-      isFavorite: this.isFavorite,
-    };
-  }
 }

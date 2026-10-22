@@ -47,6 +47,15 @@ export class VaultItemsOrmEntity {
   @Column({ name: 'auth_tag', type: 'varchar', length: 64 })
   authTag: string;
 
+  @Column({ name: 'username', type: 'varchar', length: 150, nullable: true })
+  username?: string;
+
+  @Column({ name: 'website', type: 'varchar', length: 255, nullable: true })
+  website?: string;
+
+  @Column({ name: 'notes', type: 'text', nullable: true })
+  notes?: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt: Date;
 

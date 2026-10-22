@@ -27,6 +27,7 @@ export class VaultDE {
     iv: string;
     authTag: string;
     isFavorite?: boolean;
+    secretValue: string;
   }): VaultDE {
     if (!props.userId) {
       throw new CustomError({
@@ -79,6 +80,15 @@ export class VaultDE {
   }
 
   public update(props: Partial<Omit<IVault, 'id' | 'userId' | 'createdAt'>>): void {
+    if (props.title !== undefined) {
+      if (!props.title.trim()) {
+        throw new CustomError({
+          code: ErrorCode.validation_error,
+          message: 'Encrypted payload (title) cannot be empty.',
+        });
+      }
+      this.title = props.title;
+    }
     if (props.type !== undefined) {
       this.type = props.type;
     }

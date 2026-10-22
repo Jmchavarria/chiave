@@ -34,18 +34,10 @@ export class VaultController {
   @Post(':userId')
   async createVaultItem(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() dto: CreateVaultHttpDto,
+    @Body() input: CreateVaultHttpDto,
   ): Promise<VaultDE> {
     return this.commandBus.execute<CreateVaultCommand, VaultDE>(
-      new CreateVaultCommand(
-        userId,
-        dto.title,
-        dto.type,
-        dto.encryptedData,
-        dto.iv,
-        dto.authTag,
-        dto.isFavorite,
-      ),
+      new CreateVaultCommand(userId, input.title, input.secretValue, input.type, input.isFavorite),
     );
   }
 
@@ -69,18 +61,10 @@ export class VaultController {
   async updateVaultItem(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateVaultHttpDto,
+    @Body() input: UpdateVaultHttpDto,
   ): Promise<VaultDE> {
     return this.commandBus.execute<UpdateVaultCommand, VaultDE>(
-      new UpdateVaultCommand(
-        id,
-        userId,
-        dto.type,
-        dto.encryptedData,
-        dto.iv,
-        dto.authTag,
-        dto.isFavorite,
-      ),
+      new UpdateVaultCommand(id, userId, input.type, input.isFavorite),
     );
   }
 

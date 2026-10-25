@@ -7,15 +7,50 @@ export interface FindVaultByUserIdProps extends IPagination {
   userId: number;
   search?: string;
 }
+import type { VaultItemEnumType } from '../../types/vault-item-type.enum';
+
 export interface CreateVaultProps {
   userId: number;
   title: string;
-  secretValue: string;
-  type?: string;
-  username?: string | null;
-  website?: string | null;
-  notes?: string | null;
+  type: VaultItemEnumType;
+  notes?: string;
+  folderId?: number;
   isFavorite?: boolean;
+
+  username?: string;
+  password?: string;
+  authenticatorKey?: string;
+  website?: string;
+
+  cardholderName?: string;
+  brand?: string;
+  number?: string;
+  expMonth?: string;
+  expYear?: string;
+  cvv?: string;
+
+  courtesyTitle?: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  identityUsername?: string;
+  company?: string;
+  ssn?: string;
+  passportNumber?: string;
+  licenseNumber?: string;
+  email?: string;
+  phone?: string;
+  address1?: string;
+  address2?: string;
+  address3?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+
+  publicKey?: string;
+  privateKey?: string;
+  fingerPrint?: string;
 }
 
 export type UpdateVaultProps = Partial<Omit<CreateVaultProps, 'userId'>>;

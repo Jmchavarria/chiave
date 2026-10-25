@@ -21,9 +21,9 @@ import { CreateVaultCommand } from '../../application/commands/create-vault/crea
 import { CreateVaultHttpDto } from './dto/create-vault.http-dto';
 import { UpdateVaultCommand } from '../../application/commands/update-vault/update-vault.command';
 import { DeleteVaultCommand } from '../../application/commands/delete-vault/delete-vault.command';
-import { UpdateVaultHttpDto } from './update-vault.http-dto';
 import { CurrentUser } from '../../../auth/decorators/curren-user.decorator';
 import { JwtAuthGuard } from '../../../auth/infrastructure/http/guards/jwt-auth.guard';
+import { UpdateVaultHttpDto } from './dto/update-vault.http-dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('vault')
@@ -39,16 +39,7 @@ export class VaultController {
     @Body() input: CreateVaultHttpDto,
   ): Promise<VaultDE> {
     return this.commandBus.execute<CreateVaultCommand, VaultDE>(
-      new CreateVaultCommand(
-        userId,
-        input.title,
-        input.username,
-        input.website,
-        input.secretValue,
-        input.notes,
-        input.type,
-        input.isFavorite,
-      ),
+      new CreateVaultCommand(userId, input),
     );
   }
 
@@ -67,18 +58,16 @@ export class VaultController {
       ),
     );
   }
-
   @Patch(':id')
   async updateVaultItem(
+    @CurrentUser('sub') userId: number,
     @Param('id', ParseIntPipe) id: number,
     @Body() input: UpdateVaultHttpDto,
-    @CurrentUser('sub') userId: number,
   ): Promise<VaultDE> {
     return this.commandBus.execute<UpdateVaultCommand, VaultDE>(
-      new UpdateVaultCommand(id, userId, input.type, input.isFavorite),
+      new UpdateVaultCommand(id, userId, input),
     );
   }
-
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async deleteVaultItem(

@@ -9,6 +9,7 @@ import {
   VaultRepositoryPort,
 } from '../../domain/ports/vault-repository.port';
 import { Pagination } from '../../../../common/pagintation';
+
 @Injectable()
 export class TypeOrmVaultRepository implements VaultRepositoryPort {
   constructor(
@@ -19,13 +20,43 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
   async save(input: VaultDE): Promise<VaultDE> {
     const vault = this.repository.create({
       id: input.id,
-      title: input.title,
-      authTag: input.authTag,
-      encryptedData: input.encryptedData,
-      isFavorite: input.isFavorite,
-      iv: input.iv,
-      type: input.type,
       userId: input.userId,
+      folderId: input.folderId,
+      type: input.type,
+      title: input.title,
+      isFavorite: input.isFavorite,
+      notes: input.notes,
+      username: input.username,
+      password: input.password,
+      authenticatorKey: input.authenticatorKey,
+      website: input.website,
+      cardholderName: input.cardholderName,
+      brand: input.brand,
+      number: input.number,
+      expMonth: input.expMonth,
+      expYear: input.expYear,
+      cvv: input.cvv,
+      courtesyTitle: input.courtesyTitle,
+      firstName: input.firstName,
+      middleName: input.middleName,
+      lastName: input.lastName,
+      identityUsername: input.identityUsername,
+      company: input.company,
+      ssn: input.ssn,
+      passportNumber: input.passportNumber,
+      licenseNumber: input.licenseNumber,
+      email: input.email,
+      phone: input.phone,
+      address1: input.address1,
+      address2: input.address2,
+      address3: input.address3,
+      city: input.city,
+      state: input.state,
+      postalCode: input.postalCode,
+      country: input.country,
+      publicKey: input.publicKey,
+      privateKey: input.privateKey,
+      fingerPrint: input.fingerPrint,
     });
 
     const savedEntity = await this.repository.save(vault);
@@ -35,37 +66,35 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
 
   async findByUserId(input: FindVaultByUserIdProps): Promise<Pagination<VaultDE[]>> {
     const { userId, pageQuery = 1, search, takeQuery = 5, isFavorite } = input;
+
     const query = this.repository
       .createQueryBuilder('vault')
-      .where('vault.user_id = :userId', { userId });
+      .where('vault.userId = :userId', { userId });
 
-    for (const [field, value] of Object.entries({ isFavorite })) {
-      if (value !== undefined) {
-        query.andWhere(`vault.${field} = :${field} `, { [field]: value });
-      }
+    if (isFavorite !== undefined) {
+      query.andWhere('vault.isFavorite = :isFavorite', { isFavorite });
+    }
+
+    if (search?.trim()) {
+      query.andWhere(
+        `(
+          vault.title ILIKE :search
+          OR vault.type::text ILIKE :search
+          OR vault.username ILIKE :search
+          OR vault.website ILIKE :search
+          OR vault.email ILIKE :search
+        )`,
+        { search: `%${search.trim()}%` },
+      );
     }
 
     const skip = (pageQuery - 1) * takeQuery;
 
-    if (search?.trim()) {
-      query.andWhere(
-        `
-        (
-        vault.type ILIKE :search
-        )
-        `,
-        {
-          search: `%${search}`,
-        },
-      );
-    }
-    const data = await query
-      .orderBy(`vault.createdAt`, 'DESC')
+    const [data, total] = await query
+      .orderBy('vault.createdAt', 'DESC')
       .skip(skip)
       .take(takeQuery)
-      .getMany();
-
-    const total = await query.getCount();
+      .getManyAndCount();
 
     return new Pagination(
       data.map((entity) => VaultMapper.toDomain(entity)),

@@ -1,41 +1,28 @@
 import type { VaultItemEnumType } from '../../types/vault-item-type.enum';
 
-export interface IVault {
-  id?: number;
+export interface IVaultItems {
+  id: number;
   userId: number;
   folderId?: number;
-  title: string;
   type: VaultItemEnumType;
-  isFavorite: boolean;
 
-  // Encriptación y Control general
-  encryptedData?: string;
-  iv?: string;
-  authTag?: string;
+  title: string;
+  isFavorite: boolean;
   notes?: string;
 
-  // ==========================================
-  // 1. TIPO LOGIN
-  // ==========================================
   username?: string;
-  secretValue?: string;
+  password?: string;
   authenticatorKey?: string;
   website?: string;
 
-  // ==========================================
-  // 2. TIPO CARD (TARJETA)
-  // ==========================================
   cardholderName?: string;
   brand?: string;
   number?: string;
   expMonth?: string;
   expYear?: string;
-  code?: string;
+  cvv?: string;
 
-  // ==========================================
-  // 3. TIPO IDENTITY (IDENTIDAD)
-  // ==========================================
-  identityTitle?: string;
+  courtesyTitle?: string;
   firstName?: string;
   middleName?: string;
   lastName?: string;
@@ -43,24 +30,21 @@ export interface IVault {
   company?: string;
   ssn?: string;
   passportNumber?: string;
-  passportExpDate?: string;
   licenseNumber?: string;
-  identityEmail?: string;
+  email?: string;
   phone?: string;
   address1?: string;
   address2?: string;
+  address3?: string;
   city?: string;
   state?: string;
   postalCode?: string;
   country?: string;
 
-  // ==========================================
-  // 4. TIPO SSH KEY (CLAVE SSH)
-  // ==========================================
   publicKey?: string;
   privateKey?: string;
+  fingerPrint?: string;
 
-  // Timestamps
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

@@ -1,4 +1,3 @@
-// src/app/vault/infrastructure/persistence/entities/vault-item.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -50,8 +49,7 @@ export class VaultItemsOrmEntity {
   @Column({ nullable: true })
   username?: string;
 
-  @Column({ type: 'text', nullable: true })
-  secretValue?: string;
+  password?: string;
 
   @Column({ nullable: true })
   authenticatorKey?: string;
@@ -59,6 +57,7 @@ export class VaultItemsOrmEntity {
   @Column({ type: 'text', nullable: true })
   website?: string;
 
+  // Card
   @Column({ nullable: true })
   cardholderName?: string;
 
@@ -75,10 +74,12 @@ export class VaultItemsOrmEntity {
   expYear?: string;
 
   @Column({ nullable: true })
-  code?: string; // CVV
+  cvv?: string; // CVV
+
+  // identity
 
   @Column({ nullable: true })
-  identityTitle?: string;
+  courtesyTitle?: string;
 
   @Column({ nullable: true })
   firstName?: string;
@@ -96,19 +97,16 @@ export class VaultItemsOrmEntity {
   company?: string;
 
   @Column({ nullable: true })
-  ssn?: string;
+  ssn?: string; //social security number
 
   @Column({ nullable: true })
   passportNumber?: string;
 
   @Column({ nullable: true })
-  passportExpDate?: string;
-
-  @Column({ nullable: true })
   licenseNumber?: string;
 
   @Column({ nullable: true })
-  identityEmail?: string;
+  email?: string;
 
   @Column({ nullable: true })
   phone?: string;
@@ -118,6 +116,9 @@ export class VaultItemsOrmEntity {
 
   @Column({ nullable: true })
   address2?: string;
+
+  @Column({ nullable: true })
+  address3?: string;
 
   @Column({ nullable: true })
   city?: string;
@@ -131,11 +132,16 @@ export class VaultItemsOrmEntity {
   @Column({ nullable: true })
   country?: string;
 
+  // ssh key
+
   @Column({ type: 'text', nullable: true })
   publicKey?: string;
 
   @Column({ type: 'text', nullable: true })
   privateKey?: string;
+
+  @Column({ type: 'text', nullable: true })
+  fingerPrint?: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,17 +1,61 @@
 import { CustomError } from '../../../../common/errors/custom.error';
 import { ErrorCode } from '../../../../common/errors/error-code-enum';
-import type { VaultItemEnumType } from '../../types/vault-item.type';
+import type { VaultItemEnumType } from '../../types/vault-item-type.enum';
 import type { IVault } from '../interfaces/vault.interface';
 
 export class VaultDE {
   public id: number;
   public userId: number;
+  public folderId?: number;
   public title: string;
   public type: VaultItemEnumType;
   public isFavorite: boolean;
-  public encryptedData: string;
-  public iv: string;
-  public authTag: string;
+  public encryptedData?: string;
+  public secretValue?: string;
+  public iv?: string;
+  public website?: string;
+  public username?: string;
+  public notes?: string;
+  public authTag?: string;
+
+  // ==========================================
+  // CAMPOS ESPECÍFICOS: TIPO CARD
+  // ==========================================
+  public cardholderName?: string;
+  public brand?: string;
+  public number?: string;
+  public expMonth?: string;
+  public expYear?: string;
+  public code?: string;
+
+  // ==========================================
+  // CAMPOS ESPECÍFICOS: TIPO IDENTITY
+  // ==========================================
+  public identityTitle?: string;
+  public firstName?: string;
+  public middleName?: string;
+  public lastName?: string;
+  public identityUsername?: string;
+  public company?: string;
+  public ssn?: string;
+  public passportNumber?: string;
+  public passportExpDate?: string;
+  public licenseNumber?: string;
+  public identityEmail?: string;
+  public phone?: string;
+  public address1?: string;
+  public address2?: string;
+  public city?: string;
+  public state?: string;
+  public postalCode?: string;
+  public country?: string;
+
+  // ==========================================
+  // CAMPOS ESPECÍFICOS: TIPO SSH KEY
+  // ==========================================
+  public publicKey?: string;
+  public privateKey?: string;
+
   public createdAt: Date;
   public updatedAt: Date;
 
@@ -21,13 +65,52 @@ export class VaultDE {
 
   public static create(props: {
     userId: number;
+    folderId?: number;
     title: string;
     type: VaultItemEnumType;
-    encryptedData: string;
-    iv: string;
-    authTag: string;
+    encryptedData?: string;
+    iv?: string;
+    authTag?: string;
     isFavorite?: boolean;
-    secretValue: string;
+    notes?: string;
+
+    // Login
+    username?: string;
+    secretValue?: string;
+    authenticatorKey?: string;
+    website?: string;
+
+    // Card
+    cardholderName?: string;
+    brand?: string;
+    number?: string;
+    expMonth?: string;
+    expYear?: string;
+    code?: string;
+
+    // Identity
+    identityTitle?: string;
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+    identityUsername?: string;
+    company?: string;
+    ssn?: string;
+    passportNumber?: string;
+    passportExpDate?: string;
+    licenseNumber?: string;
+    identityEmail?: string;
+    phone?: string;
+    address1?: string;
+    address2?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+
+    // SSH Key
+    publicKey?: string;
+    privateKey?: string;
   }): VaultDE {
     if (!props.userId) {
       throw new CustomError({
@@ -39,28 +122,14 @@ export class VaultDE {
     if (!props.type) {
       throw new CustomError({
         code: ErrorCode.validation_error,
-        message: 'Item type (LOGIN, NOTE, CARD) is required.',
+        message: 'Item type is required.',
       });
     }
 
-    if (!props.encryptedData || props.encryptedData.trim() === '') {
+    if (!props.title || props.title.trim() === '') {
       throw new CustomError({
         code: ErrorCode.validation_error,
-        message: 'Encrypted payload (encryptedData) cannot be empty.',
-      });
-    }
-
-    if (!props.iv || props.iv.trim() === '') {
-      throw new CustomError({
-        code: ErrorCode.validation_error,
-        message: 'Initialization vector (iv) is required for AES-256-GCM encryption.',
-      });
-    }
-
-    if (!props.authTag || props.authTag.trim() === '') {
-      throw new CustomError({
-        code: ErrorCode.validation_error,
-        message: 'Authentication tag (authTag) is required to verify integrity.',
+        message: 'Title is required for a vault item.',
       });
     }
 
@@ -68,12 +137,53 @@ export class VaultDE {
 
     return new VaultDE({
       userId: props.userId,
+      folderId: props.folderId,
       title: props.title,
       type: props.type,
       encryptedData: props.encryptedData,
       iv: props.iv,
       authTag: props.authTag,
       isFavorite: props.isFavorite ?? false,
+      notes: props.notes,
+
+      // Login
+      username: props.username,
+      secretValue: props.secretValue,
+      authenticatorKey: props.authenticatorKey,
+      website: props.website,
+
+      // Card
+      cardholderName: props.cardholderName,
+      brand: props.brand,
+      number: props.number,
+      expMonth: props.expMonth,
+      expYear: props.expYear,
+      code: props.code,
+
+      // Identity
+      identityTitle: props.identityTitle,
+      firstName: props.firstName,
+      middleName: props.middleName,
+      lastName: props.lastName,
+      identityUsername: props.identityUsername,
+      company: props.company,
+      ssn: props.ssn,
+      passportNumber: props.passportNumber,
+      passportExpDate: props.passportExpDate,
+      licenseNumber: props.licenseNumber,
+      identityEmail: props.identityEmail,
+      phone: props.phone,
+      address1: props.address1,
+      address2: props.address2,
+      city: props.city,
+      state: props.state,
+      postalCode: props.postalCode,
+      country: props.country,
+
+      // SSH Key
+      publicKey: props.publicKey,
+      privateKey: props.privateKey,
+
       createdAt: now,
       updatedAt: now,
     });
@@ -84,54 +194,69 @@ export class VaultDE {
       if (!props.title.trim()) {
         throw new CustomError({
           code: ErrorCode.validation_error,
-          message: 'Encrypted payload (title) cannot be empty.',
+          message: 'Title cannot be empty.',
         });
       }
       this.title = props.title;
     }
+
     if (props.type !== undefined) {
       this.type = props.type;
     }
 
-    if (props.encryptedData !== undefined) {
-      if (!props.encryptedData.trim()) {
-        throw new CustomError({
-          code: ErrorCode.validation_error,
-          message: 'Encrypted payload (encryptedData) cannot be empty.',
-        });
-      }
-      this.encryptedData = props.encryptedData;
-    }
-
-    if (props.iv !== undefined) {
-      if (!props.iv.trim()) {
-        throw new CustomError({
-          code: ErrorCode.validation_error,
-          message: 'Initialization vector (iv) cannot be empty.',
-        });
-      }
-      this.iv = props.iv;
-    }
-
-    if (props.authTag !== undefined) {
-      if (!props.authTag.trim()) {
-        throw new CustomError({
-          code: ErrorCode.validation_error,
-          message: 'Authentication tag (authTag) cannot be empty.',
-        });
-      }
-      this.authTag = props.authTag;
+    if (props.folderId !== undefined) {
+      this.folderId = props.folderId;
     }
 
     if (props.isFavorite !== undefined) {
       this.isFavorite = props.isFavorite;
     }
 
-    this.updatedAt = new Date();
-  }
+    // 🟢 Lista de campos opcionales tipados de forma segura
+    const allowedKeys: Array<keyof IVault> = [
+      'encryptedData',
+      'iv',
+      'authTag',
+      'secretValue',
+      'website',
+      'username',
+      'notes',
+      'cardholderName',
+      'brand',
+      'number',
+      'expMonth',
+      'expYear',
+      'code',
+      'identityTitle',
+      'firstName',
+      'middleName',
+      'lastName',
+      'identityUsername',
+      'company',
+      'ssn',
+      'passportNumber',
+      'passportExpDate',
+      'licenseNumber',
+      'identityEmail',
+      'phone',
+      'address1',
+      'address2',
+      'city',
+      'state',
+      'postalCode',
+      'country',
+      'publicKey',
+      'privateKey',
+    ];
 
-  public toggleFavorite(): void {
-    this.isFavorite = !this.isFavorite;
+    for (const key of allowedKeys) {
+      if (props[key] !== undefined) {
+        // Se usa Record<string, unknown> para evitar el tipo 'any' que rechaza ESLint
+        (this as Record<string, unknown>)[key] = props[key];
+      }
+    }
+
+    this.updatedAt = new Date();
   }
 
   public static reconstitute(props: IVault): VaultDE {

@@ -3,7 +3,7 @@ import { VaultDE } from '../../../domain/entities/vault.domain-entity';
 import { VaultRepositoryPort } from '../../../domain/ports/vault-repository.port';
 import { CreateVaultCommand } from './create-vault.command';
 import { EncryptionPort } from '../../../domain/ports/encryption-repository.port';
-import { VaultItemEnumType } from '../../../types/vault-item.type';
+import { VaultItemEnumType } from '../../../types/vault-item-type.enum';
 
 @CommandHandler(CreateVaultCommand)
 export class CreateVaultHandler implements ICommandHandler<CreateVaultCommand, VaultDE> {

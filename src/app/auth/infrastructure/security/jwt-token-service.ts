@@ -17,7 +17,9 @@ export class JwtTokenService implements TokenServicePort {
   ) {}
 
   async signAccessToken(payload: { sub: number; email: string }): Promise<string> {
+    const secret = this.configService.getOrThrow<string>('JWT_ACCESS_SECRET');
     return this.jwtService.signAsync(payload, {
+      secret,
       expiresIn: '15m',
     });
   }

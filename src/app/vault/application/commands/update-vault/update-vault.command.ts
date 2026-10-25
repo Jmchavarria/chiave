@@ -1,4 +1,4 @@
-import type { VaultItemEnumType } from '../../../types/vault-item.type';
+import type { VaultItemEnumType } from '../../../types/vault-item-type.enum';
 
 export class UpdateVaultCommand {
   constructor(

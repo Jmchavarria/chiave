@@ -11,15 +11,20 @@ import { DeleteVaultHandler } from './application/commands/delete-vault/delete-v
 import { ToggleFavoriteVaultHandler } from './application/commands/toggle-favorite-vault/toggle-favorite-vault.handler';
 import { EncryptionPort } from './domain/ports/encryption-repository.port';
 import { EncryptionAdapter } from './infrastructure/persistence/encryption.adapter';
+import { UpdateVaultHandler } from './application/commands/update-vault/update-vault.handler';
+import { FindVaultByIdHandler } from './application/queries/find-vault-by-id/find-vault-by-id.handler';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([VaultItemsOrmEntity]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([VaultItemsOrmEntity]), CqrsModule, AuthModule],
   controllers: [VaultController],
   providers: [
     CreateVaultHandler,
     FindVaultByUserIdHandler,
     DeleteVaultHandler,
     ToggleFavoriteVaultHandler,
+    UpdateVaultHandler,
+    FindVaultByIdHandler,
     {
       provide: VaultRepositoryPort,
       useClass: TypeOrmVaultRepository,

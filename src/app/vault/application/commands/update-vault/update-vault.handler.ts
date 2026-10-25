@@ -19,11 +19,17 @@ export class UpdateVaultHandler implements ICommandHandler<UpdateVaultCommand> {
 
     if (secretValue) {
       const { encryptedData, iv, authTag } = this.encryptionPort.encrypt(secretValue);
+
       existingItem.update({
         type,
         encryptedData,
         iv,
         authTag,
+        isFavorite,
+      });
+    } else {
+      existingItem.update({
+        type,
         isFavorite,
       });
     }

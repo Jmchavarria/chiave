@@ -12,8 +12,10 @@ export class CreateVaultHandler implements ICommandHandler<CreateVaultCommand, V
   ) {}
 
   async execute(command: CreateVaultCommand): Promise<VaultDE> {
-    const { userId, payload } = command;
-    const { password, ...restPayload } = payload;
+    const {
+      userId,
+      payload: { password, ...restPayload },
+    } = command;
 
     let encryptedPassword: string | undefined;
     let iv: string | undefined;

@@ -50,13 +50,19 @@ export class VaultItemsOrmEntity {
   username?: string;
 
   @Column({ nullable: true })
-  passwordHash?: string;
+  password?: string;
 
   @Column({ nullable: true })
   authenticatorKey?: string;
 
   @Column({ type: 'text', nullable: true })
   website?: string;
+
+  @Column({ nullable: true })
+  iv?: string; // Vector de inicialización (obligatorio para AES-GCM)
+
+  @Column({ nullable: true })
+  authTag?: string; // Sello de autenticación (integridad de los datos)
 
   // Card
   @Column({ nullable: true })

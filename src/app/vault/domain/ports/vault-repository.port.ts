@@ -16,9 +16,11 @@ export interface CreateVaultProps {
   notes?: string;
   folderId?: number;
   isFavorite?: boolean;
+  iv?: string;
+  authTag?: string;
 
   username?: string;
-  passwordHash?: string;
+  password?: string;
   authenticatorKey?: string;
   website?: string;
 

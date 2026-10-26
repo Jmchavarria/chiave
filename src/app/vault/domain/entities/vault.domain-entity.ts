@@ -2,12 +2,7 @@ import { CustomError } from '../../../../common/errors/custom.error';
 import { ErrorCode } from '../../../../common/errors/error-code-enum';
 import { VaultItemEnumType } from '../../types/vault-item-type.enum';
 import type { IVaultItems } from '../interfaces/vault.interface';
-
-type CreateVaultProps = Omit<IVaultItems, 'id' | 'createdAt' | 'updatedAt' | 'isFavorite'> & {
-  isFavorite?: boolean;
-};
-
-type UpdateVaultProps = Partial<Omit<IVaultItems, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>;
+import type { CreateVaultProps, UpdateVaultProps } from '../ports/vault-repository.port';
 
 export class VaultDE implements IVaultItems {
   public id!: number;

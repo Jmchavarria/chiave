@@ -18,7 +18,7 @@ export interface CreateVaultProps {
   isFavorite?: boolean;
 
   username?: string;
-  password?: string;
+  passwordHash?: string;
   authenticatorKey?: string;
   website?: string;
 

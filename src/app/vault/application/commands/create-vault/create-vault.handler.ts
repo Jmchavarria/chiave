@@ -9,7 +9,7 @@ import { PasswordHasherPort } from '../../../../users/domain/ports/password-hash
 export class CreateVaultHandler implements ICommandHandler<CreateVaultCommand, VaultDE> {
   constructor(
     private readonly vaultRepository: VaultRepositoryPort,
-    private readonly hashingPort: PasswordHasherPort, // Inyectamos el adaptador/puerto de hasheo
+    private readonly hashingPort: PasswordHasherPort,
   ) {}
 
   async execute(command: CreateVaultCommand): Promise<VaultDE> {

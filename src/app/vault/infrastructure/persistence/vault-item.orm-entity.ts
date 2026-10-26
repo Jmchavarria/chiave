@@ -49,7 +49,8 @@ export class VaultItemsOrmEntity {
   @Column({ nullable: true })
   username?: string;
 
-  password?: string;
+  @Column({ nullable: true })
+  passwordHash?: string;
 
   @Column({ nullable: true })
   authenticatorKey?: string;

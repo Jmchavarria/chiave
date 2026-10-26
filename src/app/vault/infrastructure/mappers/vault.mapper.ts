@@ -12,7 +12,7 @@ export class VaultMapper {
       isFavorite: vault.isFavorite,
       notes: vault.notes,
       username: vault.username,
-      password: vault.password,
+      passwordHash: vault.passwordHash,
       authenticatorKey: vault.authenticatorKey,
       website: vault.website,
       cardholderName: vault.cardholderName,

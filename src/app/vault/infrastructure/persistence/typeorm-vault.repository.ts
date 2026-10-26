@@ -27,7 +27,7 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
       isFavorite: input.isFavorite,
       notes: input.notes,
       username: input.username,
-      password: input.password,
+      passwordHash: input.passwordHash,
       authenticatorKey: input.authenticatorKey,
       website: input.website,
       cardholderName: input.cardholderName,

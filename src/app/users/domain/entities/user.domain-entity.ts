@@ -1,14 +1,14 @@
 import { CustomError } from '../../../../common/errors/custom.error';
 import { ErrorCode } from '../../../../common/errors/error-code-enum';
 import type { IUser } from '../interfaces/user.interface';
-import type { UserStatus } from '../types/user-status.type';
+import type { UserStatusType } from '../types/user-status.type';
 
 export class UserDE {
   public readonly id: number;
   public readonly name: string;
   public readonly email: string;
   public readonly passwordHash: string;
-  public readonly status: UserStatus;
+  public readonly status: UserStatusType;
   public readonly emailVerifiedAt: Date | null;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
@@ -70,7 +70,7 @@ export class UserDE {
       });
     }
 
-    const validStatuses: UserStatus[] = ['PENDING_VERIFICATION', 'ACTIVE', 'SUSPENDED'];
+    const validStatuses: UserStatusType[] = ['PENDING_VERIFICATION', 'ACTIVE', 'SUSPENDED'];
 
     if (!validStatuses.includes(props.status)) {
       throw new CustomError({

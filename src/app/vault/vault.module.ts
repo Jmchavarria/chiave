@@ -13,9 +13,10 @@ import { EncryptionAdapter } from './infrastructure/persistence/encryption.adapt
 import { UpdateVaultHandler } from './application/commands/update-vault/update-vault.handler';
 import { FindVaultByIdHandler } from './application/queries/find-vault-by-id/find-vault-by-id.handler';
 import { AuthModule } from '../auth/auth.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([VaultItemsOrmEntity]), CqrsModule, AuthModule],
+  imports: [TypeOrmModule.forFeature([VaultItemsOrmEntity]), CqrsModule, AuthModule, UsersModule],
   controllers: [VaultController],
   providers: [
     CreateVaultHandler,

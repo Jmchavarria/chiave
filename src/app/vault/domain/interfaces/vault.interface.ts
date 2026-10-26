@@ -11,7 +11,7 @@ export interface IVaultItems {
   notes?: string;
 
   username?: string;
-  password?: string;
+  passwordHash?: string;
   authenticatorKey?: string;
   website?: string;
 

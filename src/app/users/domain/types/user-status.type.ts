@@ -1,1 +1,1 @@
-export type UserStatus = 'PENDING_VERIFICATION' | 'ACTIVE' | 'SUSPENDED';
+export type UserStatusType = 'PENDING_VERIFICATION' | 'ACTIVE' | 'SUSPENDED';

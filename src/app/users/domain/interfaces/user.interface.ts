@@ -1,11 +1,11 @@
-import type { UserStatus } from '../types/user-status.type';
+import type { UserStatusType } from '../types/user-status.type';
 
 export interface IUser {
   id?: number;
   name: string;
   email: string;
   passwordHash?: string;
-  status: UserStatus;
+  status: UserStatusType;
   emailVerifiedAt: Date | null;
   createdAt?: Date;
   updatedAt?: Date;

@@ -19,7 +19,7 @@ export class VaultDE implements IVaultItems {
   public notes?: string;
 
   public username?: string;
-  public password?: string;
+  public passwordHash?: string;
   public authenticatorKey?: string;
   public website?: string;
 

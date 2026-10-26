@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import * as argon2 from 'argon2';
 import { dataSource } from './data-source';
-import type { UserStatus } from '../app/users/domain/types/user-status.type';
+import type { UserStatusType } from '../app/users/domain/types/user-status.type';
 import { UserOrmEntity } from '../app/users/infrastructure/persistence/user.orm-entity';
 
 async function seed(): Promise<void> {
@@ -16,7 +16,7 @@ async function seed(): Promise<void> {
       name: string;
       email: string;
       password: string;
-      status: UserStatus;
+      status: UserStatusType;
       emailVerifiedAt: Date | null;
     }[] = [
       {

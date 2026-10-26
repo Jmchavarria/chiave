@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import type { UserStatus } from '../../domain/types/user-status.type';
+import type { UserStatusType } from '../../domain/types/user-status.type';
 import { VaultItemsOrmEntity } from '../../../vault/infrastructure/persistence/vault-item.orm-entity';
 
 @Entity({ name: 'users' })
@@ -30,7 +30,7 @@ export class UserOrmEntity {
     length: 30,
     default: 'PENDING_VERIFICATION',
   })
-  status: UserStatus;
+  status: UserStatusType;
 
   @OneToMany(() => VaultItemsOrmEntity, (vaultItem) => vaultItem.user)
   vaultItems: VaultItemsOrmEntity[];

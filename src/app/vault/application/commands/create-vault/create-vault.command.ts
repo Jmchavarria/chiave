@@ -7,21 +7,18 @@ export interface CreateVaultCommandPayload {
   folderId?: number;
   isFavorite?: boolean;
 
-  // Login
   username?: string;
   password?: string;
   authenticatorKey?: string;
   website?: string;
 
-  // Card
   cardholderName?: string;
-  number?: string;
   brand?: string;
+  number?: string;
   expMonth?: string;
   expYear?: string;
   cvv?: string;
 
-  // Identity
   courtesyTitle?: string;
   firstName?: string;
   middleName?: string;
@@ -30,20 +27,20 @@ export interface CreateVaultCommandPayload {
   company?: string;
   ssn?: string;
   passportNumber?: string;
-  passportExpDate?: string;
   licenseNumber?: string;
-  identityEmail?: string;
+  email?: string;
   phone?: string;
   address1?: string;
   address2?: string;
+  address3?: string;
   city?: string;
   state?: string;
   postalCode?: string;
   country?: string;
 
-  // SSH Key
   publicKey?: string;
   privateKey?: string;
+  fingerPrint?: string;
 }
 
 export class CreateVaultCommand {

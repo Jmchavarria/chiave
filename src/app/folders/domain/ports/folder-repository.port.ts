@@ -5,6 +5,8 @@ export interface CreateFolderProps {
   userId: number;
 }
 
+export type UpdateFolderProps = Partial<CreateFolderProps>;
+
 export abstract class FolderRepositoryPort {
   abstract save(folder: FolderDE): Promise<FolderDE>;
   abstract findByNameAndUserId(name: string, userId: number): Promise<FolderDE | null>;

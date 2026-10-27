@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateFolderCommand } from '../../application/commands/create-folder/create-folder.command';
@@ -18,6 +19,8 @@ import { FindFolderByIdQuery } from '../../application/queries/find-folder-by-id
 import { FindFoldersByUserQuery } from '../../application/queries/find-folders-by-user/find-folders-by-user.query';
 import { FolderDE } from '../../domain/entities/folder.domain-entity';
 import { DeleteFolderCommand } from '../../application/commands/delete-folder/delete-folder.command';
+import { UpdateFolderCommand } from '../../application/commands/update-folder/update-folder.command';
+import { UpdateFolderHttpDto } from './dto/update-folder.http-dto';
 
 @Controller('folder')
 @UseGuards(JwtAuthGuard)
@@ -33,6 +36,15 @@ export class FolderController {
     @Body() input: CreateFolderHttpDto,
   ): Promise<VaultDE> {
     return this.commandBus.execute(new CreateFolderCommand(userId, input));
+  }
+
+  @Patch(':id')
+  async update(
+    @CurrentUser('sub') userId: number,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() input: UpdateFolderHttpDto,
+  ): Promise<VaultDE> {
+    return this.commandBus.execute(new UpdateFolderCommand(id, userId, input));
   }
 
   @Get(':id')

@@ -50,11 +50,29 @@ export class VaultDE implements IVaultItems {
   public privateKey?: string;
   public fingerPrint?: string;
 
+  public isArchived?: boolean;
+  public isDeleted!: boolean;
   public createdAt!: Date;
   public updatedAt!: Date;
 
   private constructor(attributes: Partial<IVaultItems>) {
     Object.assign(this, attributes);
+  }
+
+  public validateOwner(userId: number, action = 'access'): void {
+    if (!Number.isInteger(userId) || userId <= 0) {
+      throw new CustomError({
+        code: ErrorCode.validation_error,
+        message: 'A valid user ID is required.',
+      });
+    }
+
+    if (this.userId !== userId) {
+      throw new CustomError({
+        code: ErrorCode.validation_error,
+        message: `You do not have permission to ${action} this vault item.`,
+      });
+    }
   }
 
   public static create(props: CreateVaultProps): VaultDE {
@@ -85,25 +103,40 @@ export class VaultDE implements IVaultItems {
       ...props,
       title: props.title.trim(),
       isFavorite: props.isFavorite ?? false,
+      isArchived: false,
+      isDeleted: false,
       createdAt: now,
       updatedAt: now,
     });
   }
 
-  public update(props: UpdateVaultProps, requesterUserId: number): void {
-    if (!Number.isInteger(requesterUserId) || requesterUserId <= 0) {
-      throw new CustomError({
-        code: ErrorCode.validation_error,
-        message: 'A valid user ID is required to update a vault item.',
-      });
-    }
+  public archive(userId: number): void {
+    this.validateOwner(userId, 'archive');
+    this.isArchived = true;
+    this.updatedAt = new Date();
+  }
 
-    if (requesterUserId !== this.userId) {
-      throw new CustomError({
-        code: ErrorCode.validation_error,
-        message: 'You are not authorized to update this vault item.',
-      });
-    }
+  public unarchive(userId: number): void {
+    this.validateOwner(userId, 'unarchive');
+    this.isArchived = false;
+    this.updatedAt = new Date();
+  }
+
+  public softDelete(userId: number): void {
+    this.validateOwner(userId, 'delete');
+    this.isDeleted = true;
+    this.isArchived = false;
+    this.updatedAt = new Date();
+  }
+
+  public restore(userId: number): void {
+    this.validateOwner(userId, 'restore');
+    this.isDeleted = false;
+    this.updatedAt = new Date();
+  }
+
+  public update(props: UpdateVaultProps, requesterUserId: number): void {
+    this.validateOwner(requesterUserId, 'update');
 
     if (props.title !== undefined) {
       if (!props.title.trim()) {
@@ -137,7 +170,7 @@ export class VaultDE implements IVaultItems {
     this.updatedAt = new Date();
   }
 
-  public static reconstituite(attributes: IVaultItems) {
+  public static reconstituite(attributes: IVaultItems): VaultDE {
     return new VaultDE(attributes);
   }
 }

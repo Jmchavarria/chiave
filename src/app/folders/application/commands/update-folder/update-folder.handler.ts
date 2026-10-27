@@ -22,7 +22,7 @@ export class UpdateFolderHandler implements ICommandHandler<UpdateFolderCommand,
     }
 
     if (input.name && input.name !== folder.name) {
-      const existingFolder = await this.repository.findByNameAndUserId(input.name, userId);
+      const existingFolder = await this.repository.findByNameAndUser(input.name, userId);
       if (existingFolder) {
         throw new CustomError({
           code: ErrorCode.folder_already_exist,

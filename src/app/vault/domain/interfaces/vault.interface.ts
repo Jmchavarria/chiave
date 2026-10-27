@@ -45,6 +45,8 @@ export interface IVaultItems {
   privateKey?: string;
   fingerPrint?: string;
 
+  isDeleted?: boolean;
+  isArchived?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

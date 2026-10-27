@@ -42,6 +42,7 @@ export class VaultMapper {
       publicKey: vault.publicKey,
       privateKey: vault.privateKey,
       fingerPrint: vault.fingerPrint,
+      isArchived: vault.isArchived,
       createdAt: vault.createdAt,
       updatedAt: vault.updatedAt,
     });

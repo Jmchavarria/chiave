@@ -66,6 +66,14 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
     return VaultMapper.toDomain(savedEntity);
   }
 
+  async findArchivedByUserId(userId: number): Promise<VaultDE[]> {
+    const records = await this.repository.find({
+      where: { userId, isArchived: true },
+      order: { createdAt: 'DESC' },
+    });
+    return records.map((record) => VaultMapper.toDomain(record));
+  }
+
   async findByUserId(input: FindVaultByUserIdProps): Promise<Pagination<VaultDE[]>> {
     const { userId, pageQuery = 1, search, takeQuery = 5, isFavorite } = input;
 
@@ -114,7 +122,30 @@ export class TypeOrmVaultRepository implements VaultRepositoryPort {
     return entity ? VaultMapper.toDomain(entity) : null;
   }
 
+  async archiveByFolderId(folderId: number, userId: number): Promise<void> {
+    await this.repository.update({ folderId, userId }, { isArchived: true });
+  }
+
+  async unarchiveByFolderId(folderId: number, userId: number): Promise<void> {
+    await this.repository.update(
+      { folderId, userId },
+      { isArchived: false, updatedAt: new Date() },
+    );
+  }
+
+  async findTrashByUserId(userId: number): Promise<VaultDE[]> {
+    const ormEntities = await this.repository.find({
+      where: { userId, isDeleted: true },
+      order: { updatedAt: 'DESC' },
+    });
+    return ormEntities.map((entity) => VaultMapper.toDomain(entity));
+  }
+
   async softDelete(id: number, userId: number): Promise<void> {
     await this.repository.softDelete({ id, userId });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.repository.delete(id);
   }
 }

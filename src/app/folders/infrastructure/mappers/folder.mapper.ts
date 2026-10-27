@@ -6,6 +6,8 @@ export class FolderMapper {
     return FolderDE.reconstituite({
       id: entity.id,
       name: entity.name,
+      isArchived: entity.isArchived,
+      isDeleted: entity.isDeleted,
       userId: entity.userId,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -15,11 +17,11 @@ export class FolderMapper {
   static toPersistence(domain: FolderDE): FolderOrmEntity {
     const entity = new FolderOrmEntity();
 
-    // Si la entidad ya tiene un ID (fue recuperada o guardada), se lo asignamos
     if (domain.id) {
       entity.id = domain.id;
     }
-
+    entity.isDeleted = domain.isDeleted;
+    entity.isArchived = domain.isArchived;
     entity.name = domain.name;
     entity.userId = domain.userId;
 

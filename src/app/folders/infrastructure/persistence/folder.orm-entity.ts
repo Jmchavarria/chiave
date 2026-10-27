@@ -9,8 +9,14 @@ export class FolderOrmEntity {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
+  @Column({ type: 'boolean', default: false, name: 'is_archived' })
+  isArchived: boolean;
+
   @Column({ name: 'user_id', type: 'int' })
   userId: number;
+
+  @Column({ type: 'boolean', default: false, name: 'is_deleted' })
+  isDeleted: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

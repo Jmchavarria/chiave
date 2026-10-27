@@ -16,17 +16,22 @@ export class VaultItemsOrmEntity {
   id: number;
 
   @Column({ name: 'user_id' })
-  userId: number; // Identificador numérico del usuario propietario
+  userId: number;
 
   @Column({ nullable: true })
-  folderId?: number; // Identificador numérico de la carpeta (opcional)
-
+  folderId?: number;
   @Column({
     type: 'enum',
     enum: VaultItemEnumType,
     default: VaultItemEnumType.LOGIN,
   })
   type: VaultItemEnumType;
+
+  @Column({ type: 'boolean', default: false, name: 'is_archived' })
+  isArchived: boolean;
+
+  @Column({ type: 'boolean', default: false, name: 'is_deleted' })
+  isDeleted: boolean;
 
   // ==========================================
   // CAMPOS COMUNES

@@ -18,4 +18,5 @@ export enum ErrorCode {
   verification_email_does_not_exist = 1018,
   folder_not_found = 1019,
   folder_already_exist = 1020,
+  vault_not_found = 1021,
 }

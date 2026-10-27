@@ -1,20 +1,26 @@
-import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
-import { VaultRepositoryPort } from '../../../domain/ports/vault-repository.port';
-import { FindVaultByIdQuery } from '../../queries/find-vault-by-id/find-vault-by-id.query';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteVaultCommand } from './delete-vault.command';
+import { VaultRepositoryPort } from '../../../domain/ports/vault-repository.port';
+import { CustomError } from '../../../../../common/errors/custom.error';
+import { ErrorCode } from '../../../../../common/errors/error-code-enum';
 
 @CommandHandler(DeleteVaultCommand)
-export class DeleteVaultHandler implements ICommandHandler<DeleteVaultCommand> {
-  constructor(
-    private readonly queryBus: QueryBus,
-    private readonly repository: VaultRepositoryPort,
-  ) {}
+export class DeleteVaultHandler implements ICommandHandler<DeleteVaultCommand, void> {
+  constructor(private readonly repository: VaultRepositoryPort) {}
 
   async execute(command: DeleteVaultCommand): Promise<void> {
-    // 1. Validar existencia y propiedad del elemento mediante QueryBus
-    await this.queryBus.execute(new FindVaultByIdQuery(command.id, command.userId));
+    const { id, userId } = command;
 
-    // 2. Ejecutar el borrado lógico a través del puerto
-    await this.repository.softDelete(command.id, command.userId);
+    const vault = await this.repository.findById(id, userId);
+    if (!vault) {
+      throw new CustomError({
+        code: ErrorCode.vault_not_found,
+        message: 'Vault item not found',
+      });
+    }
+
+    vault.validateOwner(userId, 'delete');
+
+    await this.repository.delete(id);
   }
 }

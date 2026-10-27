@@ -15,7 +15,7 @@ export class CreateFolderHandler implements ICommandHandler<CreateFolderCommand,
       payload: { name },
     } = command;
 
-    const existingFolder = await this.repository.findByNameAndUserId(name, userId);
+    const existingFolder = await this.repository.findByNameAndUser(name, userId);
     if (existingFolder) {
       throw new CustomError({
         code: ErrorCode.folder_already_exist,

@@ -24,6 +24,10 @@ import { DeleteVaultCommand } from '../../application/commands/delete-vault/dele
 import { CurrentUser } from '../../../auth/decorators/curren-user.decorator';
 import { JwtAuthGuard } from '../../../auth/infrastructure/http/guards/jwt-auth.guard';
 import { UpdateVaultHttpDto } from './dto/update-vault.http-dto';
+import { FindArchivedVaultsQuery } from '../../application/queries/find-archived-vaults/find-archived-vaults.query';
+import { ArchiveVaultCommand } from '../../application/commands/archive-vault/archive-vault.command';
+import { UnarchiveVaultCommand } from '../../application/commands/unarchive-vault/unarchive-vault.command';
+import { FindTrashVaultsQuery } from '../../application/queries/find-trash-vaults/find-trash-vaults.query';
 
 @UseGuards(JwtAuthGuard)
 @Controller('vault')
@@ -68,6 +72,33 @@ export class VaultController {
       new UpdateVaultCommand(id, userId, input),
     );
   }
+
+  @Get('archived')
+  async findArchived(@CurrentUser('sub') userId: number): Promise<VaultDE[]> {
+    return this.queryBus.execute(new FindArchivedVaultsQuery(userId));
+  }
+
+  @Patch(':id/archive')
+  async archive(
+    @CurrentUser('sub') userId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VaultDE> {
+    return this.commandBus.execute(new ArchiveVaultCommand(id, userId));
+  }
+
+  @Patch(':id/unarchive')
+  async unarchive(
+    @CurrentUser('sub') userId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VaultDE> {
+    return this.commandBus.execute(new UnarchiveVaultCommand(id, userId));
+  }
+
+  @Get('trash')
+  async findTrash(@CurrentUser('sub') userId: number): Promise<VaultDE[]> {
+    return this.queryBus.execute(new FindTrashVaultsQuery(userId));
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async deleteVaultItem(

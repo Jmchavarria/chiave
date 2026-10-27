@@ -61,5 +61,10 @@ export abstract class VaultRepositoryPort {
   abstract save(input: CreateVaultProps): Promise<VaultDE>;
   abstract findByUserId(input: FindVaultByUserIdProps): Promise<Pagination<VaultDE[]>>;
   abstract findById(id: number, userId: number): Promise<VaultDE | null>;
+  abstract findArchivedByUserId(userId: number): Promise<VaultDE[]>;
   abstract softDelete(id: number, userId: number): Promise<void>;
+  abstract archiveByFolderId(folderId: number, userId: number): Promise<void>;
+  abstract unarchiveByFolderId(folderId: number, userId: number): Promise<void>;
+  abstract findTrashByUserId(userId: number): Promise<VaultDE[]>;
+  abstract delete(id: number): Promise<void>;
 }
